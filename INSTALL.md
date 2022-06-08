@@ -17,7 +17,7 @@ Première utilisation
 Récupérez une copie du modèle :
 
 ```sh
-git clone git@github.com:O-clock-{VotrePromo}/React-modele.git
+git clone git@github.com:O-clock-Cassini/React-modele.git
 
 cd React-modele
 
