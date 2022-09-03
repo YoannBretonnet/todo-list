@@ -126,6 +126,7 @@ class App extends React.PureComponent {
   render() {
     return (
       <div className="app">
+        <Title/>
         <Form
           newTaskInput={this.state.inputValue}
           onInputChange={this.handleTaskInputChange}
