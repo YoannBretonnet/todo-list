@@ -18,6 +18,8 @@ class App extends React.PureComponent {
       inputValue: '',
     };
 
+    this.handleTaskInputChange = this.handleTaskInputChange.bind(this);
+    this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
     this.handleTaskStatusChange = this.handleTaskStatusChange.bind(this);
     this.handleTaskRemoval = this.handleTaskRemoval.bind(this);
     this.handleEditToggle = this.handleEditToggle.bind(this);
