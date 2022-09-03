@@ -82,6 +82,12 @@ class App extends React.PureComponent {
     });
   }
 
+  // je filtre les taches pour lesquelles done est faux
+  // puis je compte la longueur du tableau filtré avec un .length
+  getOngoingTasksNumber() {
+    return this.state.tasks.filter((task) => !task.done).length;
+  }
+
   render() {
     return (
       <div className="app">
@@ -91,6 +97,7 @@ class App extends React.PureComponent {
           onEditToggle={this.handleEditToggle}
           onTaskNameEdit={this.handleTaskNameEdit}
           />
+          <Counter nbOfOngoingTasks={this.getOngoingTasksNumber()} />
       </div>
     );
   }
