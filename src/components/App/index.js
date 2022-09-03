@@ -123,7 +123,7 @@ class App extends React.PureComponent {
     return this.state.tasks.filter((task) => !task.done).length;
   }
 
-  // fonction choupi qui trie les taches
+  // fonction qui trie les taches
   getSortedTasks() {
     const sortedTasks = [...this.state.tasks];
     sortedTasks.sort((a, b) => a.done - b.done);
