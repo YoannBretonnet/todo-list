@@ -123,6 +123,14 @@ class App extends React.PureComponent {
     return this.state.tasks.filter((task) => !task.done).length;
   }
 
+  // fonction choupi qui trie les taches
+  getSortedTasks() {
+    const sortedTasks = [...this.state.tasks];
+    sortedTasks.sort((a, b) => a.done - b.done);
+
+    return sortedTasks;
+  }
+
   render() {
     return (
       <div className="app">
@@ -133,6 +141,7 @@ class App extends React.PureComponent {
           onTaskSubmit={this.handleTaskSubmit}
         />
         <Tasks
+          taskList={this.getSortedTasks()}
           onTaskStatusChange={this.handleTaskStatusChange}
           onRemoveTask={this.handleTaskRemoval}
           onEditToggle={this.handleEditToggle}
