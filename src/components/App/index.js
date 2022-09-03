@@ -26,6 +26,12 @@ class App extends React.PureComponent {
     this.handleTaskNameEdit = this.handleTaskNameEdit.bind(this);
   }
 
+  handleTaskInputChange(event) {
+    this.setState({
+      inputValue: event.target.value,
+    });
+  }
+
   handleTaskStatusChange(checkedTaskId) {
     // mon objectif : recopier le tableau de tâches
     // mais modifier le booléen de la tache qui correspond a l'id recu
@@ -58,6 +64,33 @@ class App extends React.PureComponent {
     });
 
     this.setState({ tasks: newTasks });
+  }
+
+  // gère la soumission du formulaire de nouvelle tâche
+  handleTaskSubmit(event) {
+    // on ne veut pas que la page se recharge
+    event.preventDefault();
+
+    // calcul du nouvel id
+    const ids = this.state.tasks.map((task) => task.id);
+    const newId = Math.max(...ids) + 1;
+
+    // déclaration de la nouvelle tâche
+    const newTask = {
+      done: false,
+      label: this.state.inputValue,
+      editing: false,
+      id: newId,
+    };
+
+    this.setState({
+      tasks: [ 
+        ...this.state.tasks,
+        newTask, 
+      ],
+      // je remets a zéro mon champ contrôlé
+      inputValue: '',
+    });
   }
 
   // gère la modification du nom d'une tache
