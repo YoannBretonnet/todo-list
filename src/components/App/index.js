@@ -6,37 +6,28 @@ import Counter from 'src/components/Counter';
 import Tasks from 'src/components/Tasks';
 import Title from '../Title';
 
+// import de mes données statiques
 import tasksData from 'src/data/tasks';
 
-// == Composant
-class App extends React.PureComponent {
-  constructor(props) {
-    super(props);
+// import des hooks
+import { useState } from 'react';
 
-    this.state = {
-      tasks: tasksData,
-      inputValue: '',
+function App (props) {
+ 
+  // je refactorise en utilisant le hook useState
+  const [tasks, setTasks] = useState(tasksData);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleTaskInputChange = (event) => {
+    setInputValue(event.target.value)
     };
 
-    this.handleTaskInputChange = this.handleTaskInputChange.bind(this);
-    this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
-    this.handleTaskStatusChange = this.handleTaskStatusChange.bind(this);
-    this.handleTaskRemoval = this.handleTaskRemoval.bind(this);
-    this.handleEditToggle = this.handleEditToggle.bind(this);
-    this.handleTaskNameEdit = this.handleTaskNameEdit.bind(this);
-  }
-
-  handleTaskInputChange(event) {
-    this.setState({
-      inputValue: event.target.value,
-    });
-  }
-
-  handleTaskStatusChange(checkedTaskId) {
+  const handleTaskStatusChange = (checkedTaskId) => {
     // mon objectif : recopier le tableau de tâches
     // mais modifier le booléen de la tache qui correspond a l'id recu
 
-    const newTasks = this.state.tasks.map((task) => {
+    const newTasks = tasks
+    .map((task) => {
       if (task.id === checkedTaskId) {
           return {
           ...task,
@@ -46,14 +37,13 @@ class App extends React.PureComponent {
       return task;
     });
 
-    this.setState({
-      tasks: newTasks,
-    });
-  }
+    setTasks(newTasks);
+    };
 
   // passe une tâche en mode édition avec son id
-  handleEditToggle(taskId) {
-    const newTasks = this.state.tasks.map((task) => {
+  const handleEditToggle = (taskId) => {
+    const newTasks = tasks
+    .map((task) => {
       if (task.id === taskId) {
         return {
           ...task,
@@ -63,39 +53,41 @@ class App extends React.PureComponent {
       return task;
     });
 
-    this.setState({ tasks: newTasks });
-  }
+    setTasks(newTasks);
+  };
 
   // gère la soumission du formulaire de nouvelle tâche
-  handleTaskSubmit(event) {
+  const handleTaskSubmit = (event) => {
     // on ne veut pas que la page se recharge
     event.preventDefault();
 
     // calcul du nouvel id
-    const ids = this.state.tasks.map((task) => task.id);
+    const ids = tasks.map((task) => task.id);
     const newId = Math.max(...ids) + 1;
 
     // déclaration de la nouvelle tâche
     const newTask = {
       done: false,
-      label: this.state.inputValue,
+      label: inputValue,
       editing: false,
       id: newId,
     };
 
-    this.setState({
-      tasks: [ 
-        ...this.state.tasks,
+    setTasks(
+      [ 
+        ...tasks,
         newTask, 
       ],
-      // je remets a zéro mon champ contrôlé
-      inputValue: '',
-    });
-  }
+    );
+
+    // je remets a zéro mon champ contrôlé
+    setInputValue('');
+  };
 
   // gère la modification du nom d'une tache
-  handleTaskNameEdit(taskId, newValue) {
-    const newTasks = this.state.tasks.map((task) => {
+  const handleTaskNameEdit = (taskId, newValue) => {
+    const newTasks = tasks
+    .map((task) => {
       if (task.id === taskId) {
         return {
           ...task,
@@ -105,52 +97,52 @@ class App extends React.PureComponent {
       return task;
     });
 
-    this.setState({ tasks: newTasks });
-  }
+    setTasks(newTasks);
+  };
 
   // gère la suppression d'une tâche
-  handleTaskRemoval(taskId) {
-    const newTasks = this.state.tasks.filter((task) => task.id !== taskId);
+  const handleTaskRemoval = (taskId) => {
+    const newTasks = tasks
+    .filter((task) => task.id !== taskId);
 
-    this.setState({
-      tasks: newTasks,
-    });
-  }
+    setTasks(newTasks);
+
+  };
 
   // je filtre les taches pour lesquelles done est faux
   // puis je compte la longueur du tableau filtré avec un .length
-  getOngoingTasksNumber() {
-    return this.state.tasks.filter((task) => !task.done).length;
-  }
+  const getOngoingTasksNumber = () => {
+   const number = tasks.filter((task) => !task.done).length;
+
+   return number;
+  };
 
   // fonction qui trie les taches
-  getSortedTasks() {
-    const sortedTasks = [...this.state.tasks];
+  const getSortedTasks = () => {
+    const sortedTasks = [...tasks];
     sortedTasks.sort((a, b) => a.done - b.done);
 
     return sortedTasks;
-  }
+  };
 
-  render() {
     return (
       <div className="app">
         <Title/>
         <Form
-          newTaskInput={this.state.inputValue}
-          onInputChange={this.handleTaskInputChange}
-          onTaskSubmit={this.handleTaskSubmit}
+          newTaskInput={inputValue}
+          onInputChange={handleTaskInputChange}
+          onTaskSubmit={handleTaskSubmit}
         />
         <Tasks
-          taskList={this.getSortedTasks()}
-          onTaskStatusChange={this.handleTaskStatusChange}
-          onRemoveTask={this.handleTaskRemoval}
-          onEditToggle={this.handleEditToggle}
-          onTaskNameEdit={this.handleTaskNameEdit}
+          taskList={getSortedTasks()}
+          onTaskStatusChange={handleTaskStatusChange}
+          onRemoveTask={handleTaskRemoval}
+          onEditToggle={handleEditToggle}
+          onTaskNameEdit={handleTaskNameEdit}
           />
-          <Counter nbOfOngoingTasks={this.getOngoingTasksNumber()} />
+          <Counter nbOfOngoingTasks={getOngoingTasksNumber()} />
       </div>
     );
-  }
 }
 
 // == Export
